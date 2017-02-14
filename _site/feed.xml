@@ -1,40 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Your awesome title</title>
+    <title>邓海东的博客</title>
     <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
 </description>
-    <link>http://yourdomain.com/</link>
-    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 13 Feb 2017 20:24:44 +0800</pubDate>
-    <lastBuildDate>Mon, 13 Feb 2017 20:24:44 +0800</lastBuildDate>
+    <link>http://eastjing.com/</link>
+    <atom:link href="http://eastjing.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 14 Feb 2017 22:02:23 +0800</pubDate>
+    <lastBuildDate>Tue, 14 Feb 2017 22:02:23 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>
-        <title>Welcome to Jekyll!</title>
-        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+        <title>SDL say helloword with matrix format png</title>
+        <description>&lt;p&gt;1.android studio ndk开发配置
+用sdk mannerger下载好ndk,设置项目支持ndk开发,项目中build.gradle 配置如下：&lt;/p&gt;
 
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt; &lt;span class=&quot;n&quot;&gt;sourceSets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;jniLibs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;srcDir&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;projeclibs&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;)
+//        jni.srcDirs=[]
+    }
+    task buildNative(type: Exec, description: &#39;&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Compile&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JNI&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;via&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NDK&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;) {
+        def ndkDir = android.ndkDirectory
+        commandLine &quot;$ndkDir/ndk-build&quot;,
+                &#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;, file(&#39;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jni&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;).absolutePath, // Change src/main/jni the relative path to your jni source
+                &#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;, Runtime.runtime.availableProcessors(),
+                &#39;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;,
+                &#39;&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;NDK_DEBUG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;
+    }
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+    task cleanNative(type: Exec, description: &#39;&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Clean&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JNI&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;) {
+        def ndkDir = android.ndkDirectory
+        commandLine &quot;$ndkDir/ndk-build&quot;,
+                &#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;, file(&#39;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jni&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;).absolutePath, // Change src/main/jni the relative path to your jni source
+                &#39;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clean&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;
+    }
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Tom&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &#39;Hi, Tom&#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    clean.dependsOn &#39;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cleanNative&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;
 
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+    tasks.withType(JavaCompile) {
+        compileTask -&amp;gt; compileTask.dependsOn buildNative
+    }&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;2.sdl main函数编写&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;s1&quot;&gt;&#39;struct SDL_Window *window = NULL;
+    struct SDL_Renderer *render = NULL;
+    struct SDL_Surface *bmp = NULL;
+    struct SDL_Texture *texture = NULL;
+
+    int mWidth;
+    int mHeight;
+
+    void* mPixels;
+    int mPitch;
+
+    char *filepath = &quot;portrait.png&quot;;
+
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == -1) {
+        LOGE(&quot;SDL_Init failed %s&quot;, SDL_GetError());
+    }
+
+    window = SDL_CreateWindow(&quot;SDL HelloWorld!&quot;, 100, 100, 640, 480,
+            SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+        LOGE(&quot;SDL_CreateWindow failed  %s&quot;, SDL_GetError());
+    }
+
+    render = SDL_CreateRenderer(window, -1,
+            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (render == NULL) {
+       LOGE(&quot;SDL_CreateRenderer failed  %s&quot;, SDL_GetError());
+    }
+    bmp = IMG_Load(filepath);
+    LOGE(&quot;go image_load fail&quot;, SDL_GetError());
+    if (bmp == NULL) {
+            LOGE(&quot;SDL_LoadBMP failed: %s&quot;, SDL_GetError());
+        }
+    SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(bmp, SDL_PIXELFORMAT_RGBA8888, NULL );
+    if( formattedSurface == NULL )
+     		{
+     			SDL_Log( &quot;Unable to convert loaded surface to display format! %s\n&quot;, SDL_GetError() );
+     		}
+     		else
+     		{
+     		texture =SDL_CreateTexture(render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface-&amp;gt;w, formattedSurface-&amp;gt;h );
+     		LOGE(&quot;succuss create texture wait to display&quot;, SDL_GetError());
+     		if( texture == NULL )
+            			{
+            				SDL_Log( &quot;Unable to create blank texture! SDL Error: %s\n&quot;, SDL_GetError() );
+            			}
+            			else
+            			{
+            				//Enable blending on texture
+            				//Enable blending on texture
+                            				SDL_SetTextureBlendMode( texture, SDL_BLENDMODE_BLEND );
+
+                            				//Lock texture for manipulation
+                            				SDL_LockTexture( texture, &amp;amp;formattedSurface-&amp;gt;clip_rect, &amp;amp;mPixels, &amp;amp;mPitch );
+
+                            				//Copy loaded/formatted surface pixels
+                            				memcpy( mPixels, formattedSurface-&amp;gt;pixels, formattedSurface-&amp;gt;pitch * formattedSurface-&amp;gt;h );
+
+                            				//Get image dimensions
+                            				mWidth = formattedSurface-&amp;gt;w;
+                            				mHeight = formattedSurface-&amp;gt;h;
+
+                            				//Get pixel data in editable format
+                            				Uint32* pixels = (Uint32*)mPixels;
+                            				int pixelCount = ( mPitch / 4 ) * mHeight;
+
+                            				//Map colors
+                            				Uint32 colorKey = SDL_MapRGB( formattedSurface-&amp;gt;format, 0, 0xFF, 0xFF );
+                            				Uint32 transparent = SDL_MapRGBA( formattedSurface-&amp;gt;format, 0x00, 0xFF, 0xFF, 0x00 );
+
+                            				//Color key pixels
+                            				for( int i = 0; i &amp;lt; pixelCount; ++i )
+                            				{
+                            					if( pixels[ i ] == colorKey )
+                            					{
+                            						pixels[ i ] = transparent;
+                            					}
+                            				}
+
+                            				//Unlock texture to update
+                            				SDL_UnlockTexture( texture );
+                            				mPixels = NULL;}
+     		}
+
+
+   // texture = SDL_CreateTextureFromSurface(render, bmp);
+    SDL_FreeSurface(bmp);
+    SDL_FreeSurface(formattedSurface);
+
+    SDL_RenderClear(render);
+    SDL_RenderCopy(render, texture, NULL, NULL);
+    SDL_RenderPresent(render);
+
+    SDL_Delay(10000);&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;注意图片的路径，sdl会以3中形式寻找图片1、绝对路径 2.相对路径 3.asset
+    显示的流程很简单，render 显示在哪 texture显示的内容，代码中大部分都在制造显示的内容，支持多种格式的图片。&lt;/p&gt;
+
+&lt;p&gt;3.github项目源码地址
+&lt;a href=&quot;https://github.com/highway33/vedio.git&quot;&gt;项目源码地址&lt;/a&gt;&lt;/p&gt;
 
 </description>
-        <pubDate>Mon, 13 Feb 2017 20:19:07 +0800</pubDate>
-        <link>http://yourdomain.com/jekyll/update/2017/02/13/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2017/02/13/welcome-to-jekyll.html</guid>
+        <pubDate>Mon, 28 Nov 2016 00:04:32 +0800</pubDate>
+        <link>http://eastjing.com/ndk/android/studio/sdl/2016/11/28/SDL-say-helloword-with-matrix-format-png.html</link>
+        <guid isPermaLink="true">http://eastjing.com/ndk/android/studio/sdl/2016/11/28/SDL-say-helloword-with-matrix-format-png.html</guid>
         
         
-        <category>jekyll</category>
+        <category>ndk</category>
         
-        <category>update</category>
+        <category>android</category>
+        
+        <category>studio</category>
+        
+        <category>sdl</category>
         
       </item>
     

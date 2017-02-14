@@ -1,0 +1,132 @@
+<p>1.android studio ndk开发配置
+用sdk mannerger下载好ndk,设置项目支持ndk开发,项目中build.gradle 配置如下：</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"> <span class="n">sourceSets</span><span class="p">.</span><span class="nf">main</span><span class="p">{</span>
+        <span class="n">jniLibs</span><span class="p">.</span><span class="nf">srcDir</span> <span class="kp">new</span> <span class="no">File</span><span class="p">(</span><span class="n">projeclibs</span><span class="s1">')
+//        jni.srcDirs=[]
+    }
+    task buildNative(type: Exec, description: '</span><span class="no">Compile</span> <span class="no">JNI</span> <span class="n">source</span> <span class="n">via</span> <span class="no">NDK</span><span class="s1">') {
+        def ndkDir = android.ndkDirectory
+        commandLine "$ndkDir/ndk-build",
+                '</span><span class="o">-</span><span class="no">C</span><span class="s1">', file('</span><span class="n">jni</span><span class="s1">').absolutePath, // Change src/main/jni the relative path to your jni source
+                '</span><span class="o">-</span><span class="n">j</span><span class="s1">', Runtime.runtime.availableProcessors(),
+                '</span><span class="n">all</span><span class="s1">',
+                '</span><span class="no">NDK_DEBUG</span><span class="o">=</span><span class="mi">1</span><span class="s1">'
+    }
+
+    task cleanNative(type: Exec, description: '</span><span class="no">Clean</span> <span class="no">JNI</span> <span class="n">object</span> <span class="n">files</span><span class="s1">') {
+        def ndkDir = android.ndkDirectory
+        commandLine "$ndkDir/ndk-build",
+                '</span><span class="o">-</span><span class="no">C</span><span class="s1">', file('</span><span class="n">jni</span><span class="s1">').absolutePath, // Change src/main/jni the relative path to your jni source
+                '</span><span class="n">clean</span><span class="s1">'
+    }
+
+    clean.dependsOn '</span><span class="n">cleanNative</span><span class="s1">'
+
+    tasks.withType(JavaCompile) {
+        compileTask -&gt; compileTask.dependsOn buildNative
+    }'</span></code></pre></figure>
+
+<p>2.sdl main函数编写</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="s1">'struct SDL_Window *window = NULL;
+    struct SDL_Renderer *render = NULL;
+    struct SDL_Surface *bmp = NULL;
+    struct SDL_Texture *texture = NULL;
+
+    int mWidth;
+    int mHeight;
+
+    void* mPixels;
+    int mPitch;
+
+    char *filepath = "portrait.png";
+
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == -1) {
+        LOGE("SDL_Init failed %s", SDL_GetError());
+    }
+
+    window = SDL_CreateWindow("SDL HelloWorld!", 100, 100, 640, 480,
+            SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+        LOGE("SDL_CreateWindow failed  %s", SDL_GetError());
+    }
+
+    render = SDL_CreateRenderer(window, -1,
+            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (render == NULL) {
+       LOGE("SDL_CreateRenderer failed  %s", SDL_GetError());
+    }
+    bmp = IMG_Load(filepath);
+    LOGE("go image_load fail", SDL_GetError());
+    if (bmp == NULL) {
+            LOGE("SDL_LoadBMP failed: %s", SDL_GetError());
+        }
+    SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(bmp, SDL_PIXELFORMAT_RGBA8888, NULL );
+    if( formattedSurface == NULL )
+     		{
+     			SDL_Log( "Unable to convert loaded surface to display format! %s\n", SDL_GetError() );
+     		}
+     		else
+     		{
+     		texture =SDL_CreateTexture(render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface-&gt;w, formattedSurface-&gt;h );
+     		LOGE("succuss create texture wait to display", SDL_GetError());
+     		if( texture == NULL )
+            			{
+            				SDL_Log( "Unable to create blank texture! SDL Error: %s\n", SDL_GetError() );
+            			}
+            			else
+            			{
+            				//Enable blending on texture
+            				//Enable blending on texture
+                            				SDL_SetTextureBlendMode( texture, SDL_BLENDMODE_BLEND );
+
+                            				//Lock texture for manipulation
+                            				SDL_LockTexture( texture, &amp;formattedSurface-&gt;clip_rect, &amp;mPixels, &amp;mPitch );
+
+                            				//Copy loaded/formatted surface pixels
+                            				memcpy( mPixels, formattedSurface-&gt;pixels, formattedSurface-&gt;pitch * formattedSurface-&gt;h );
+
+                            				//Get image dimensions
+                            				mWidth = formattedSurface-&gt;w;
+                            				mHeight = formattedSurface-&gt;h;
+
+                            				//Get pixel data in editable format
+                            				Uint32* pixels = (Uint32*)mPixels;
+                            				int pixelCount = ( mPitch / 4 ) * mHeight;
+
+                            				//Map colors
+                            				Uint32 colorKey = SDL_MapRGB( formattedSurface-&gt;format, 0, 0xFF, 0xFF );
+                            				Uint32 transparent = SDL_MapRGBA( formattedSurface-&gt;format, 0x00, 0xFF, 0xFF, 0x00 );
+
+                            				//Color key pixels
+                            				for( int i = 0; i &lt; pixelCount; ++i )
+                            				{
+                            					if( pixels[ i ] == colorKey )
+                            					{
+                            						pixels[ i ] = transparent;
+                            					}
+                            				}
+
+                            				//Unlock texture to update
+                            				SDL_UnlockTexture( texture );
+                            				mPixels = NULL;}
+     		}
+
+
+   // texture = SDL_CreateTextureFromSurface(render, bmp);
+    SDL_FreeSurface(bmp);
+    SDL_FreeSurface(formattedSurface);
+
+    SDL_RenderClear(render);
+    SDL_RenderCopy(render, texture, NULL, NULL);
+    SDL_RenderPresent(render);
+
+    SDL_Delay(10000);'</span></code></pre></figure>
+
+<p>注意图片的路径，sdl会以3中形式寻找图片1、绝对路径 2.相对路径 3.asset
+    显示的流程很简单，render 显示在哪 texture显示的内容，代码中大部分都在制造显示的内容，支持多种格式的图片。</p>
+
+<p>3.github项目源码地址
+<a href="https://github.com/highway33/vedio.git">项目源码地址</a></p>
+
