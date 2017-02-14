@@ -2,12 +2,12 @@
 layout: post
 title: SDL say helloword with matrix format png
 date: 2016-11-27 16:04:32
-categories:ndk android studio sdl
+categories：ndk android studio sdl
 ---
 1.android studio ndk开发配置
 用sdk mannerger下载好ndk,设置项目支持ndk开发,项目中build.gradle 配置如下：
 
-{% highlight java %}
+{% highlight ruby %}
  sourceSets.main{
         jniLibs.srcDir new File(projeclibs')
 //        jni.srcDirs=[]
@@ -37,7 +37,7 @@ categories:ndk android studio sdl
 {% endhighlight %}
 
 2.sdl main函数编写
-{% highlight c++ %}
+{% highlight ruby%}
 'struct SDL_Window *window = NULL;
     struct SDL_Renderer *render = NULL;
     struct SDL_Surface *bmp = NULL;
