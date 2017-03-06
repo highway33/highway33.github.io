@@ -1,0 +1,133 @@
+---
+layout: post
+title: "从源码角度解析Rxjava"
+date: 2016-05-14 16:04:32
+categories: Rxjava 源码
+---
+从使用入手，一个简单的例子：
+{% highlight ruby %}
+Observable.just("one", "two", "three", "four", "five")
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.computation())
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(@NonNull String s) throws Exception {
+                        return s.equals("one");
+                    }
+                })
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+{% endhighlight %}
+第1到3行代码最终组成一个ObservableFilter被观察者对象，有点像装饰模式，从Observable类看下如何组装：
+{% highlight ruby %}
+    public final Observable<T> filter(Predicate<? super T> predicate) {
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
+        return RxJavaPlugins.onAssembly(new ObservableFilter<T>(this, predicate));
+    }
+{% endhighlight %}
+第3行代码是Rxjava统一对被观察者对象做的处理，其实质还是返回ObservableFilter<T>(this, predicate)，可以看出组装只是将当前的被观察者对象当成新创建的被观察者对象的一个成员。
+前面的组装完成，然后开始订阅征程，最开始调用ObservableFilter的订阅方法，其实质也是调用抽象类Observable，Observable的订阅方法如下：
+{% highlight ruby %}
+public final void subscribe(Observer<? super T> observer) {
+        ObjectHelper.requireNonNull(observer, "observer is null");
+        try {
+            observer = RxJavaPlugins.onSubscribe(this, observer);
+
+            ObjectHelper.requireNonNull(observer, "Plugin returned null Observer");
+
+            subscribeActual(observer);
+        } catch (NullPointerException e) { // NOPMD
+            throw e;
+        } catch (Throwable e) {
+            Exceptions.throwIfFatal(e);
+            // can't call onError because no way to know if a Disposable has been set or not
+            // can't call onSubscribe because the call might have set a Subscription already
+            RxJavaPlugins.onError(e);
+
+            NullPointerException npe = new NullPointerException("Actually not, but can't throw other exceptions due to RS");
+            npe.initCause(e);
+            throw npe;
+        }
+{% endhighlight %}
+最关键的方法subscribeActual，被观察者的子类都实现了这一方法，例子中前面每一个方法的调用都重新生成了一个被观察者对象，现在我们来看下我们的例子被观察者组装链，ObservableFromArray->ObservableSubscribeOn->ObservableObserveOn->ObservableFilter
+观察者的组装链：FromArrayDisposable->SubscribeOnObserver->ObserveOnObserver->FilterObserver
+这两条组装链是Rxjava的核心，被观察者链由小封装到大，而观察者链相反。观察者是通过subscribeActual方法链试封装。
+现在分析下Rxjava调用流程ObservableFilter被订阅时调用其subscribeActual（），ObservableFilter的subscribeActual方法是用ObservableObserveOn订阅了FilterObserver，ObservableObserveOn然后继续调用subscribeActual，
+如此循环直到调用ObservableFromArray的subscribeActual方法，ObservableFromArray的subscribeActual方法如下：
+{% highlight ruby %}
+public void subscribeActual(Observer<? super T> s) {
+        FromArrayDisposable<T> d = new FromArrayDisposable<T>(s, array);
+
+        s.onSubscribe(d);
+
+        if (d.fusionMode) {
+            return;
+        }
+
+        d.run();
+    }
+    {% endhighlight %}
+主要分析下FromArrayDisposable的run方法：
+{% highlight ruby %}
+            T[] a = array;
+            int n = a.length;
+        for (int i = 0; i < n && !isDisposed(); i++) {
+                T value = a[i];
+                if (value == null) {
+                    actual.onError(new NullPointerException("The " + i + "th element is null"));
+                    return;
+                }
+                actual.onNext(value);
+            }
+            if (!isDisposed()) {
+                actual.onComplete();
+            }
+            {% endhighlight %}
+第9行代码中的actual其实就是经过层层封装的FromArrayDisposable的观察者（注：虽然不是观察者）,该方法对每一个数据源都进行观察者链试传导。
+
+总结：其实就是两条链试传导，一条是被观察者通过subscribeActual()方法传导，第二条是观察者通过onNext()方法传导，通过这两条链完成了线程的切换，不符合规则
+数据的过滤，核心功能的完成。用到的设计模式职责链，装饰模式等。
+
+具体分析下线程切换和过滤功能:
+        
+FilterObserver的onNext方法完成过滤：
+{% highlight ruby %}
+public void onNext(T t) {
+            if (sourceMode == NONE) {
+                boolean b;
+                try {
+                    b = filter.test(t);
+                } catch (Throwable e) {
+                    fail(e);
+                    return;
+                }
+                if (b) {
+                    actual.onNext(t);
+                }
+            } else {
+                actual.onNext(null);
+            }
+        }
+        {% highlight ruby %}
+ObservableObserveOn是控制观察者链线程切换，线程切换在观察者onNext（）方法中借助Sheduler完成。
+
+ObservableSubscribeOn是控制被观察者线程切换，在subscribeActual（）方法中完成。

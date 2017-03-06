@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SDL say helloword with matrix format png"
-date: 2016-11-27 16:04:32
+date: 2016-02-13 16:04:32
 categories: ndk android studio sdl
 ---
 1.android studio ndk开发配置
