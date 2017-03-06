@@ -127,7 +127,7 @@ public void onNext(T t) {
                 actual.onNext(null);
             }
         }
-        {% highlight ruby %}
+        {% endhighlight %}
 ObservableObserveOn是控制观察者链线程切换，线程切换在观察者onNext（）方法中借助Sheduler完成。
 
 ObservableSubscribeOn是控制被观察者线程切换，在subscribeActual（）方法中完成。
