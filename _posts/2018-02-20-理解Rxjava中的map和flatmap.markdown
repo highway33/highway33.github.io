@@ -5,8 +5,7 @@ date: 2018-02-20 16:04:32
 categories: Rxjava map flatmap
 ---
 本文所举列子代码参考链接https://www.jianshu.com/p/52cd2d514528
-打印学生选的课程
-map实现
+打印学生选的课程map实现
 {% highlight ruby %}
 List<Student> students = new ArrayList<Student>();
         Action1<List<Course>> action1 = new Action1<List<Course>>() {
@@ -27,7 +26,6 @@ List<Student> students = new ArrayList<Student>();
                     }
                 })
                 .subscribe(action1);
-
 {% endhighlight %}
 
 flatmap实现
@@ -52,6 +50,7 @@ List<Student> students = new ArrayList<Student>();
 {% endhighlight %}
 使用map订阅者接收到的是List<Course>，而使用flatmap订阅者接受到的course，从源码来分析为什么会这样
 map中的onnext方法
+
 {% highlight ruby %}
 actual.onNext(v);
 {% endhighlight %}
