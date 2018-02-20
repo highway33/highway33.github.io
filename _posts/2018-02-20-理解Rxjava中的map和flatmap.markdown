@@ -9,9 +9,6 @@ categories: Rxjava map flatmap
 map实现
 {% highlight ruby %}
 List<Student> students = new ArrayList<Student>();
-        students.add...
-        ...
-
         Action1<List<Course>> action1 = new Action1<List<Course>>() {
             @Override
             public void call(List<Course> courses) {
@@ -58,6 +55,7 @@ map中的onnext方法
 {% highlight ruby %}
 actual.onNext(v);
 {% endhighlight %}
+
 flatmap中的onnext方法
 {% highlight ruby %}
 subscribeInner(p);
