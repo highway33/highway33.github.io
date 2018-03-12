@@ -5,7 +5,7 @@ date: 2016-05-14 16:04:32
 categories: android fontsize setting
 ---
 app在设置中一般都有改变字体大小这项需求。由rxjava订阅模式实现，借助BehaviorSubject消息源，当用户更改字体大小时，通过BehaviorSubject向所有订阅消息的TextSizeView发送缩放倍数，从而改变字体大小。
-新建一个字体类：
+新建一个字体类
 {% highlight ruby %}
 /**
  * Created by haidong on 18/3/12.
