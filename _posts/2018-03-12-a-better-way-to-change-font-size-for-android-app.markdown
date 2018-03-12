@@ -69,7 +69,7 @@ public class TextSizeView extends android.support.v7.widget.AppCompatTextView im
 }
 {% endhighlight %}
 
-消息源单列类：
+消息源单列类
 {% highlight ruby %}
 public class TextSizeChangeUtil {
     public static  BehaviorSubject mSubject;
